@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+<style type="text/css">
+    #big{
+    	width: 180px;
+    	height:20px;
+    }
+	#searchResult{
+		width: 180px;
+		height:20px;
+		box-sizing: border-box;
+	}	
+	#searchResults{
+		width: 180px;
+		height: 100px;
+		overflow-y:auto;
+		position: absolute;
+		top:20px;
+		display: none;
+
+	}
+	#search {
+		position: absolute;
+		top:0;
+	}
+	.sr{
+		display: none;
+		
+		height: 20px;
+		width: 100%;
+	}
+	.sr:hover{
+		background-color: gray;
+	}
+</style>	
+</head>
+<body>
+	
+
+
+<div id="big">
+	<input id="search" type="search" name=""/>
+	<div id=searchResults>
+<!-- 	 <span class="sr">格斗天王</span>
+	 <span class="sr">吴家杰很帅</span>
+	 <span class="sr">哇哈哈</span>
+	 <span class="sr">天天</span>
+	 <span class="sr">我勒个去</span>
+	 <span class="sr">加多宝</span>
+	 <span class="sr">全员加速中3</span>
+	 <span class="sr">瓦虾</span>
+	 <span class="sr">avb</span>
+	 <span class="sr">就被谭某某</span>	
+	 <span class="sr">风扇</span> -->
+	</div>
+	
+</div>
+<script type="text/javascript">
+var group=['格斗天王','吴家杰很帅','哇哈哈','天天','我勒个去','加多宝','全员加速中3','瓦虾','avb','就被谭某某','风扇','ww'];	
+(function(){
+	console.time(1);
+var searchResults=document.getElementById("searchResults");
+var len=group.length;
+var temp=document.createDocumentFragment();
+for(var i=0;i<len;i++){
+	var span=document.createElement("span");
+	span.className="sr";
+	span.innerHTML=group[i];
+	temp.appendChild(span);
+}
+searchResults.appendChild(temp);
+console.timeEnd(1);
+})();
+
+var searchResult=document.getElementById("search");
+var searchGroup=searchResults.getElementsByTagName("span");
+var big=document.getElementById("big");
+var fakeSearch=document.getElementById("fakeSearch");
+var can=true;
+for(let i=0,l=searchGroup.length;i<l;++i){
+	searchGroup[i].onclick=function(){
+		search.value=this.innerText;
+		var len=searchGroup.length;
+		while(len){
+			searchGroup[--len].style.display="none";
+		}			
+	}
+}
+
+search.onfocus=function(){
+	showList(this.value);
+	searchResults.style.display="block";
+}
+search.onblur=function(){
+	setTimeout(function(){
+		var len=searchGroup.length;
+		searchResults.style.display="none";
+	},150);
+}
+search.oninput=function(){
+	if(!this.value){
+		showList(this.value);
+		return;		
+	}
+	searcha(this.value);
+}
+function showList(e){
+	if(!e){
+		var len=searchGroup.length;
+		while(len){
+			searchGroup[--len].style.display="block";
+		}		
+	}	
+}
+function searcha(value){
+	var temp=[];
+	var temp2=[];
+	for(let i=0,len=group.length;i<len;i++){	
+	    //不符合的	
+		if(group[i].indexOf(value)<0){
+			temp.push(i);	
+		}
+		else{
+			temp2.push(i);
+		}
+	}
+	//隐藏
+	for(let i=0,len2=temp.length;i<len2;++i){
+		 searchGroup[temp[i]].style.display="none";
+	}
+	//出现
+	for(let j=0,len=temp2.length;j<len;++j){
+		searchGroup[temp2[j]].style.display="block";
+	}
+
+}
+</script>
+</body>
+</html>
