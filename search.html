@@ -38,19 +38,23 @@
 </style>	
 </head>
 <body>
-	
-
-
 <div id="big">
 	<input id="search" type="search" name=""/>
 	<div id=searchResults>
-	</div>
-	
+	</div>	
 </div>
 <script type="text/javascript">
+var a={
+a:1,
+b:1,
+c:function(){
+	console.log(this.a);	
+}
+
+};
+
 var group=['格斗天王','吴家杰很帅','哇哈哈','天天','我勒个去','加多宝','全员加速中3','瓦虾','avb','就被谭某某','风扇','ww'];	
 (function(){
-	console.time(1);
 var searchResults=document.getElementById("searchResults");
 var len=group.length;
 var temp=document.createDocumentFragment();
@@ -61,14 +65,57 @@ for(var i=0;i<len;i++){
 	temp.appendChild(span);
 }
 searchResults.appendChild(temp);
-console.timeEnd(1);
 })();
-
+var searchTool={
+	focus:function(){
+		this.showList();
+		searchResults.style.display="block";
+	},
+	blur:function(){
+		setTimeout(function(){
+			var len=searchGroup.length;
+			searchResults.style.display="none";
+		},150);
+	},
+	input:function(e){
+		if(!e){
+			this.showList(e);
+			return;		
+		}
+		this.searcha(e);		
+	},
+	showList:function(e){
+		if(!e){
+			var len=searchGroup.length;
+			while(len){
+				searchGroup[--len].style.display="block";
+			}		
+		}		
+	},
+	searcha:function(v){
+		var temp=[];
+		var temp2=[];
+		for(let i=0,len=group.length;i<len;i++){	
+		    //不符合的	
+			if(group[i].indexOf(v)<0){
+				temp.push(i);	
+			}
+			else{
+				temp2.push(i);
+			}
+		}
+		//隐藏
+		for(let i=0,len2=temp.length;i<len2;++i){
+			 searchGroup[temp[i]].style.display="none";
+		}
+		//出现
+		for(let j=0,len=temp2.length;j<len;++j){
+			searchGroup[temp2[j]].style.display="block";
+		}
+	}
+}
 var searchResult=document.getElementById("search");
 var searchGroup=searchResults.getElementsByTagName("span");
-var big=document.getElementById("big");
-var fakeSearch=document.getElementById("fakeSearch");
-var can=true;
 for(let i=0,l=searchGroup.length;i<l;++i){
 	searchGroup[i].onclick=function(){
 		search.value=this.innerText;
@@ -80,52 +127,15 @@ for(let i=0,l=searchGroup.length;i<l;++i){
 }
 
 search.onfocus=function(){
-	showList(this.value);
-	searchResults.style.display="block";
+	searchTool.focus();
 }
 search.onblur=function(){
-	setTimeout(function(){
-		var len=searchGroup.length;
-		searchResults.style.display="none";
-	},150);
+	searchTool.blur();
 }
 search.oninput=function(){
-	if(!this.value){
-		showList(this.value);
-		return;		
-	}
-	searcha(this.value);
+	searchTool.input(this.value); 
 }
-function showList(e){
-	if(!e){
-		var len=searchGroup.length;
-		while(len){
-			searchGroup[--len].style.display="block";
-		}		
-	}	
-}
-function searcha(value){
-	var temp=[];
-	var temp2=[];
-	for(let i=0,len=group.length;i<len;i++){	
-	    //不符合的	
-		if(group[i].indexOf(value)<0){
-			temp.push(i);	
-		}
-		else{
-			temp2.push(i);
-		}
-	}
-	//隐藏
-	for(let i=0,len2=temp.length;i<len2;++i){
-		 searchGroup[temp[i]].style.display="none";
-	}
-	//出现
-	for(let j=0,len=temp2.length;j<len;++j){
-		searchGroup[temp2[j]].style.display="block";
-	}
 
-}
 </script>
 </body>
 </html>
