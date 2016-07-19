@@ -44,16 +44,97 @@
 	</div>	
 </div>
 <script type="text/javascript">
-var a={
-a:1,
-b:1,
-c:function(){
-	console.log(this.a);	
-}
-
+var throttle = function (fn, delay, atleast) {
+    var timer = null;
+    var previous = null; 
+    console.log(fn);
+    return function () {
+    	alert();
+        // var now = +new Date();
+  
+        // if ( !previous ) previous = now;
+ 
+        // if ( atleast && now - previous > atleas ) {
+        //     fn();
+        //     // 重置上一次开始时间为本次结束时间
+        //     previous = now;
+           
+        // } else {
+        //     clearTimeout(timer);
+        //     timer = setTimeout(function() {
+        //         fn();
+        //            previous = null;
+        //     }, delay);
+        // }
+    }
 };
-
-var group=['格斗天王','吴家杰很帅','哇哈哈','天天','我勒个去','加多宝','全员加速中3','瓦虾','avb','就被谭某某','风扇','ww'];	
+var group=['格斗天王','吴家杰很帅','哇哈哈','天天','我勒个去','加多宝','全员加速中3','瓦虾','avb','就被谭某某','风扇','ww'];
+var search=document.getElementById("search");
+var searchTool={
+	searchGroup:function(){
+		return searchResults.getElementsByTagName("span");
+	},
+	init:function(){
+		for(var i=0,l=this.searchGroup().length;i<l;++i){
+			that=this;
+			this.searchGroup()[i].onclick=function(){
+				search.value=this.innerText;
+				var len=that.searchGroup().length;
+				while(len){
+					that.searchGroup()[--len].style.display="none";
+				}			
+			}
+		}		
+	},
+	focus:function(){
+		this.showList();
+		searchResults.style.display="block";
+	},
+	blur:function(){
+		that=this;
+		setTimeout(function(){
+			var len=that.searchGroup().length;
+			searchResults.style.display="none";
+		},150);
+	},
+	input:function(e){
+		
+		if(!e){
+			this.showList(e);
+			return;		
+		}
+		this.searcha(e);		
+	},
+	showList:function(e){
+		if(!e){
+			var len=this.searchGroup().length;
+			while(len){
+				this.searchGroup()[--len].style.display="block";
+			}		
+		}		
+	},
+	searcha:function(v){
+		var temp=[];
+		var temp2=[];
+		for(var i=0,len=group.length;i<len;i++){	
+		    //不符合的	
+			if(group[i].indexOf(v)<0){
+				temp.push(i);	
+			}
+			else{
+				temp2.push(i);
+			}
+		}
+		//隐藏
+		for(var i=0,len2=temp.length;i<len2;++i){
+			 this.searchGroup()[temp[i]].style.display="none";
+		}
+		//出现
+		for(var j=0,len=temp2.length;j<len;++j){
+			this.searchGroup()[temp2[j]].style.display="block";
+		}
+	}
+};	
 (function(){
 var searchResults=document.getElementById("searchResults");
 var len=group.length;
@@ -65,66 +146,11 @@ for(var i=0;i<len;i++){
 	temp.appendChild(span);
 }
 searchResults.appendChild(temp);
+searchTool.init();
 })();
-var searchTool={
-	focus:function(){
-		this.showList();
-		searchResults.style.display="block";
-	},
-	blur:function(){
-		setTimeout(function(){
-			var len=searchGroup.length;
-			searchResults.style.display="none";
-		},150);
-	},
-	input:function(e){
-		if(!e){
-			this.showList(e);
-			return;		
-		}
-		this.searcha(e);		
-	},
-	showList:function(e){
-		if(!e){
-			var len=searchGroup.length;
-			while(len){
-				searchGroup[--len].style.display="block";
-			}		
-		}		
-	},
-	searcha:function(v){
-		var temp=[];
-		var temp2=[];
-		for(let i=0,len=group.length;i<len;i++){	
-		    //不符合的	
-			if(group[i].indexOf(v)<0){
-				temp.push(i);	
-			}
-			else{
-				temp2.push(i);
-			}
-		}
-		//隐藏
-		for(let i=0,len2=temp.length;i<len2;++i){
-			 searchGroup[temp[i]].style.display="none";
-		}
-		//出现
-		for(let j=0,len=temp2.length;j<len;++j){
-			searchGroup[temp2[j]].style.display="block";
-		}
-	}
-}
-var searchResult=document.getElementById("search");
-var searchGroup=searchResults.getElementsByTagName("span");
-for(let i=0,l=searchGroup.length;i<l;++i){
-	searchGroup[i].onclick=function(){
-		search.value=this.innerText;
-		var len=searchGroup.length;
-		while(len){
-			searchGroup[--len].style.display="none";
-		}			
-	}
-}
+
+
+
 
 search.onfocus=function(){
 	searchTool.focus();
@@ -133,7 +159,7 @@ search.onblur=function(){
 	searchTool.blur();
 }
 search.oninput=function(){
-	searchTool.input(this.value); 
+	throttle(searchTool.input(this.value),1000,3000); 
 }
 
 </script>
